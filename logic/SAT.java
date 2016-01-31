@@ -1,4 +1,4 @@
-package timetable;
+package timetable.logic;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -14,6 +14,11 @@ import org.sat4j.pb.tools.DependencyHelper;
 import org.sat4j.specs.ContradictionException;
 import org.sat4j.specs.IVec;
 import org.sat4j.specs.TimeoutException;
+
+import timetable.data.Day;
+import timetable.data.Group;
+import timetable.data.Lesson;
+import timetable.data.Subject;
 
 public class SAT {
 	private PseudoOptDecorator optimizer;
@@ -48,8 +53,8 @@ public class SAT {
 					lessonsADay, lessonCombinations, helper);
 			hardConstrainer.setConstraints();
 
-			SoftConstrainer softConstrainer = new SoftConstrainer(
-					lessonCombinations, helper);
+			SoftConstrainer softConstrainer = new SoftConstrainer(curriculum,
+					lessonCombinations, lessonsADay, helper);
 			softConstrainer.setConstraints();
 
 			if (helper.hasASolution()) {

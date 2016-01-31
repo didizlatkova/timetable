@@ -1,4 +1,4 @@
-package timetable;
+package timetable.data;
 
 public class Lesson {
 	private final Day day;

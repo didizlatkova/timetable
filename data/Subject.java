@@ -1,4 +1,4 @@
-package timetable;
+package timetable.data;
 
 public enum Subject {
 	Maths, English, Physics, Chemistry, Sport, Informatics, Literature, Geography, Music, Biology, French, Arts, History;

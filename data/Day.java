@@ -1,4 +1,4 @@
-package timetable;
+package timetable.data;
 
 public enum Day {
 	Mon, Tue, Wed, Thu, Fri;

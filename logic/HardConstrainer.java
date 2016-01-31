@@ -1,10 +1,15 @@
-package timetable;
+package timetable.logic;
 
 import java.util.HashMap;
 import java.util.List;
 
 import org.sat4j.pb.tools.DependencyHelper;
 import org.sat4j.specs.ContradictionException;
+
+import timetable.data.Day;
+import timetable.data.Group;
+import timetable.data.Lesson;
+import timetable.data.Subject;
 
 public class HardConstrainer {
 

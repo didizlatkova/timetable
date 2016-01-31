@@ -1,4 +1,4 @@
-package timetable;
+package timetable.logic;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.sat4j.pb.SolverFactory;
+
+import timetable.data.Day;
+import timetable.data.Group;
+import timetable.data.Lesson;
+import timetable.data.Subject;
 
 public class Main {
 
