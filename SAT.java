@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.sat4j.pb.IPBSolver;
 import org.sat4j.pb.PseudoOptDecorator;
@@ -22,7 +23,7 @@ public class SAT {
 		optimizer = new PseudoOptDecorator(solver);
 		optimizer.setTimeout(timeout);
 		optimizer.setVerbose(true);
-		helper = new DependencyHelper<Lesson, String>(optimizer, false);
+		helper = new DependencyHelper<Lesson, String>(optimizer, true);
 	}
 
 	public int variables() {
@@ -47,11 +48,20 @@ public class SAT {
 					lessonsADay, lessonCombinations, helper);
 			hardConstrainer.setConstraints();
 
+			SoftConstrainer softConstrainer = new SoftConstrainer(
+					lessonCombinations, helper);
+			softConstrainer.setConstraints();
+
 			if (helper.hasASolution()) {
 				System.out.println("hasASolution");
 				IVec<Lesson> sol = helper.getSolution();
 				for (Iterator<Lesson> it = sol.iterator(); it.hasNext();) {
 					result.add(it.next());
+				}
+			} else {
+				Set<String> reason = helper.why();
+				for (String string : reason) {
+					System.out.println(string);
 				}
 			}
 		} catch (TimeoutException e) {

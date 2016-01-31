@@ -34,9 +34,10 @@ public class Main {
 		// System.out.println(solver.variables());
 		// System.out.println(solver.constraints());
 		// solver.printStats();
-		
-		printStudentSchedule(result);
-		printTeacherSchedule(result);
+		if (!result.isEmpty()) {
+			printStudentSchedule(result);
+			printTeacherSchedule(result);
+		}
 	}
 
 	private static void printStudentSchedule(List<Lesson> result) {
@@ -57,7 +58,7 @@ public class Main {
 							.filter(l -> l.getGroup().equals(group)
 									&& l.getDay().equals(day)
 									&& l.getNumber() == n).findFirst();
-					
+
 					if (lesson.isPresent()) {
 						System.out.print(lesson.get().getSubject());
 					} else {
@@ -110,14 +111,4 @@ public class Main {
 					.compareTo(o2.getSubject().toString());
 		}
 	};
-
-	private static void printSimpleTeacherSchedule(List<Lesson> result) {
-		Lesson[] asdf = result.stream().sorted(comp).toArray(Lesson[]::new);
-		;
-		for (Lesson l : asdf) {
-			System.out.println(l.getSubject() + " " + l.getDay() + " "
-					+ l.getNumber() + " " + l.getGroup());
-		}
-	}
-
 }
