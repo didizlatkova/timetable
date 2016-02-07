@@ -1,7 +1,7 @@
 package timetable.logic;
 
-import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,7 +12,6 @@ import org.sat4j.pb.IPBSolver;
 import org.sat4j.pb.PseudoOptDecorator;
 import org.sat4j.pb.tools.DependencyHelper;
 import org.sat4j.specs.ContradictionException;
-import org.sat4j.specs.IVec;
 import org.sat4j.specs.TimeoutException;
 
 import timetable.data.Day;
@@ -23,12 +22,22 @@ import timetable.data.Subject;
 public class SAT {
 	private PseudoOptDecorator optimizer;
 	private DependencyHelper<Lesson, String> helper;
+	private HardConstrainer hardConstrainer;
+	private SoftConstrainer softConstrainer;
 
-	public SAT(IPBSolver solver, int timeout) {
+	public SAT(IPBSolver solver, int timeout,
+			HashMap<Subject, Integer> curriculum, int lessonsADay) {
 		optimizer = new PseudoOptDecorator(solver);
 		optimizer.setTimeout(timeout);
 		optimizer.setVerbose(true);
 		helper = new DependencyHelper<Lesson, String>(optimizer, true);
+
+		List<Lesson> lessonCombinations = computeAllCombinations(lessonsADay);
+		hardConstrainer = new HardConstrainer(curriculum, lessonsADay,
+				lessonCombinations, helper);
+
+		softConstrainer = new SoftConstrainer(curriculum, lessonCombinations,
+				helper);
 	}
 
 	public int variables() {
@@ -37,33 +46,23 @@ public class SAT {
 
 	public int constraints() {
 		return helper.getNumberOfConstraints();
-	}
-
-	public void printStats() {
-		System.out.println(optimizer.toString(""));
-		optimizer.printStat(new PrintWriter(System.out, true), "");
-	}
-
-	public List<Lesson> solve(HashMap<Subject, Integer> curriculum,
-			int lessonsADay) {
+	}	
+	
+	public List<Lesson> solve() {
 		List<Lesson> result = new ArrayList<Lesson>();
 		try {
-			List<Lesson> lessonCombinations = computeAllCombinations(lessonsADay);
-			HardConstrainer hardConstrainer = new HardConstrainer(curriculum,
-					lessonsADay, lessonCombinations, helper);
 			hardConstrainer.setConstraints();
-
-			SoftConstrainer softConstrainer = new SoftConstrainer(curriculum,
-					lessonCombinations, lessonsADay, helper);
 			softConstrainer.setConstraints();
 
 			if (helper.hasASolution()) {
-				System.out.println("hasASolution");
-				IVec<Lesson> sol = helper.getSolution();
+				System.out.println("Solution Found :)");
+
+				Collection<Lesson> sol = helper.getASolution();
 				for (Iterator<Lesson> it = sol.iterator(); it.hasNext();) {
 					result.add(it.next());
 				}
 			} else {
+				System.out.println("Solution Not Found :(");
 				Set<String> reason = helper.why();
 				for (String string : reason) {
 					System.out.println(string);

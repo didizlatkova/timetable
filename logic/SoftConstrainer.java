@@ -16,15 +16,13 @@ public class SoftConstrainer {
 	private HashMap<Subject, Integer> curriculum;
 	private List<Lesson> lessonCombinations;
 	private DependencyHelper<Lesson, String> helper;
-	private int lessonsADay;
 
 	public SoftConstrainer(HashMap<Subject, Integer> curriculum,
-			List<Lesson> lessonCombinations, int lessonsADay,
+			List<Lesson> lessonCombinations,
 			DependencyHelper<Lesson, String> helper) {
 		this.curriculum = curriculum;
 		this.lessonCombinations = lessonCombinations;
 		this.helper = helper;
-		this.lessonsADay = lessonsADay;
 	}
 
 	public void setConstraints() throws ContradictionException {

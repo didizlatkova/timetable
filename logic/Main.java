@@ -1,6 +1,5 @@
 package timetable.logic;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -34,11 +33,12 @@ public class Main {
 		curriculum.put(Subject.Sport, 3);
 		curriculum.put(Subject.Physics, 2);
 
-		solver = new SAT(SolverFactory.newCuttingPlanes(), 1000);
-		List<Lesson> result = solver.solve(curriculum, LESSONS_A_DAY);
-		// System.out.println(solver.variables());
-		// System.out.println(solver.constraints());
-		// solver.printStats();
+		solver = new SAT(SolverFactory.newCuttingPlanes(), 1000, curriculum,
+				LESSONS_A_DAY);
+		List<Lesson> result = solver.solve();
+		System.out.println("Variables count: " + solver.variables());
+		System.out.println("Constraints count: " + solver.constraints());
+
 		if (!result.isEmpty()) {
 			printStudentSchedule(result);
 			printTeacherSchedule(result);
@@ -108,12 +108,4 @@ public class Main {
 			System.out.println();
 		}
 	}
-
-	static Comparator<Lesson> comp = new Comparator<Lesson>() {
-		@Override
-		public int compare(Lesson o1, Lesson o2) {
-			return o1.getSubject().toString()
-					.compareTo(o2.getSubject().toString());
-		}
-	};
 }
